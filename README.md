@@ -16,6 +16,10 @@ restore, certificates and kubeconfig, enforced NetworkPolicies, and image
 registries with pull secrets.
 
 ---
+<img width="1906" height="1024" alt="k8s-practice-lab simulator" src="https://github.com/user-attachments/assets/e1724abb-98ba-449b-a555-a7ad80d75324" />
+
+
+
 
 ## 1. One command
 
