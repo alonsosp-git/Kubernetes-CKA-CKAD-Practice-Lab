@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: config-consumer
+  labels:
+    app: config-consumer
+spec:
+  volumes:
+    - name: config
+      configMap:
+        name: app-config
+  containers:
+    - name: app
+      image: nginx:1.25
+      env:
+        - name: APP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: APP_PORT
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: password
+      envFrom:
+        - configMapRef:
+            name: app-config
+      volumeMounts:
+        - name: config
+          mountPath: /etc/config

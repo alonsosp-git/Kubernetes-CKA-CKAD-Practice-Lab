@@ -1,0 +1,14 @@
+# Lab 12 - Init containers and multi-container pods  (handbook pages 19-20)
+# Goal: ordered startup work, then the sidecar pattern.
+
+kubectl apply -f manifests/pod-init.yaml
+kubectl get pods
+kubectl describe pod app-with-init
+sim tick 8
+kubectl get pods
+
+kubectl apply -f manifests/pod-sidecar.yaml
+sim tick 6
+kubectl get pods
+kubectl describe pod web-with-sidecar
+kubectl logs web-with-sidecar -c log-shipper

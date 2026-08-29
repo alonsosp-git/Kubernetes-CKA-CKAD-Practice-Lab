@@ -1,0 +1,64 @@
+NOTICE
+======
+
+Origin of the code
+------------------
+All source in this repository is original work, released under the MIT licence
+in LICENSE. There are no vendored third-party sources: the simulator, the YAML
+parser, the HTTP server, the SVG renderer and the diagrams are written from
+scratch on the Python standard library.
+
+Third-party content NOT included
+--------------------------------
+This project was written alongside a commercially published Kubernetes study
+guide. No part of that guide is distributed here — no page images, no scanned
+text, no PDF. `handbook/pages/` and `handbook/text/` ship empty and are listed
+in .gitignore. If you own a copy of a study guide and want its pages shown
+beside the exercises, `tools/import_handbook.py` extracts them on your own
+machine, for your own use.
+
+What is reproduced from the guide is factual and structural only: the ordering
+of topics and which page number covers which topic. Facts and organising
+schemes of that kind are not protected expression; the wording of every note,
+gotcha, command explanation and diagram in this repository is this project's
+own.
+
+Trademarks
+----------
+The following are trademarks of their respective owners, used here only to
+identify the software this tool teaches and interoperates with. This project is
+not affiliated with, endorsed by, or sponsored by any of them.
+
+  Kubernetes, kubectl, etcd, Helm, containerd    The Linux Foundation / CNCF
+  Docker, Docker Desktop, Docker Compose         Docker, Inc.
+  minikube, kind                                 The Linux Foundation / CNCF
+  CKA, CKAD, CKS                                 The Linux Foundation
+  Windows, WSL, Segoe UI, Consolas                Microsoft Corporation
+  macOS, Menlo                                    Apple Inc.
+  NGINX                                           F5, Inc.
+  PostgreSQL                                      The PostgreSQL Global
+                                                  Development Group
+
+Notes on specific marks:
+
+* "Kubernetes" appears in this project's description, not as the leading
+  element of its name, which is what the CNCF's trademark guidelines ask for.
+  No Kubernetes or CNCF logo is used or bundled.
+* CKA and CKAD are named only to describe which exam objectives the exercises
+  happen to touch. This is not an official, licensed or endorsed exam
+  preparation product, and nothing here is drawn from any exam.
+* "Segoe UI", "Consolas", "Menlo" and similar appear only as font *names* in
+  CSS and Tk font stacks — a request that the operating system use a font it
+  already has. No font files are bundled or redistributed, so no font licence
+  is engaged.
+* Container images referenced by the exercises (nginx, busybox, postgres) are
+  named as strings in example manifests. None is downloaded, embedded or
+  redistributed; the default simulator never pulls anything at all.
+
+Kubernetes API shapes
+---------------------
+The manifests use the field names and structure of the Kubernetes API. Those
+are the public interface of an Apache-2.0 licensed project, and the manifests
+here were written for these exercises rather than copied from the Kubernetes
+documentation. Where an idea is a well-known Kubernetes idiom, it is described
+in this project's own words.

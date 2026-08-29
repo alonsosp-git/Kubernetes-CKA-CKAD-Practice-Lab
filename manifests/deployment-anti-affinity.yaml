@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spread
+  labels:
+    app: spread
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: spread
+  template:
+    metadata:
+      labels:
+        app: spread
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: spread
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: app
+          image: nginx:1.25
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi

@@ -1,0 +1,12 @@
+# Lab 02 - Architecture  (handbook pages 4, 39-44, 49)
+# Goal: see the control plane / worker split, node labels and taints.
+
+kubectl get nodes -o wide
+kubectl describe node lab-control-plane
+kubectl describe node lab-worker-3
+kubectl get nodes --show-labels
+kubectl top nodes
+
+# The control plane is tainted so ordinary workloads stay off it.
+# worker-3 is a smaller GPU node, also tainted.
+kubectl explain architecture

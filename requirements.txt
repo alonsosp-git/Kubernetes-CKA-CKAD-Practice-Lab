@@ -1,0 +1,31 @@
+# k8s-practice-lab has NO required third-party dependencies.
+# The simulator, the YAML parser, the web server and the graphics are all
+# standard library, which is the cheapest supply-chain control there is:
+# nothing to audit, nothing to update, nothing to typosquat (OWASP A06).
+#
+# Everything below is OPTIONAL. Install it only if you want the extra:
+#
+#   pip install -r requirements.txt
+#
+# ---------------------------------------------------------------------------
+# Pillow -- smoother scaling of handbook page images in the desktop GUI.
+#
+# The floor is not cosmetic. This is the one dependency that parses untrusted
+# binary input (image files), and Pillow's decoders have a steady stream of
+# memory-safety advisories. Everything below 12.3.0 is affected by at least one
+# of:
+#   CVE-2026-25990  out-of-bounds write parsing a crafted PSD  (fixed 12.1.1)
+#   CVE-2026-42309  buffer overflow via nested draw coordinates (fixed 12.2.0)
+#   CVE-2026-59205  heap corruption in ImageCms transforms      (fixed 12.3.0)
+#   CVE-2026-59203  infinite loop parsing a crafted EPS         (fixed 12.3.0)
+#   CVE-2026-54058  out-of-bounds read in the McIdas AREA codec (fixed 12.3.0)
+#
+# Re-check before each release: `pip-audit -r requirements.txt`, which CI also
+# runs on every push.
+Pillow>=12.3.0 ; python_version >= "3.9"
+
+# PyYAML is detected and used if it is already present, but is deliberately not
+# required -- the bundled parser covers the manifests these labs use. If you do
+# install it, the code only ever calls yaml.safe_load_all (never yaml.load), so
+# a manifest cannot construct arbitrary Python objects (CWE-502).
+#   PyYAML>=6.0.2

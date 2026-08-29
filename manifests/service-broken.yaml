@@ -1,0 +1,11 @@
+# Selector matches nothing -> zero endpoints. Classic bug.
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-broken
+spec:
+  selector:
+    app: web-typo
+  ports:
+    - port: 80
+      targetPort: 80

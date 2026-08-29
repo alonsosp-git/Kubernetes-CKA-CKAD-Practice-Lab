@@ -1,0 +1,30 @@
+# Lab 15 - Requests, limits and probes  (handbook pages 26-27)
+# Goal: size workloads and gate traffic on readiness.
+
+kubectl apply -f manifests/pod-resources.yaml
+kubectl get pods
+kubectl describe pod sized
+kubectl top pods
+kubectl top nodes
+
+# too big for any node -> Pending / Insufficient cpu
+kubectl apply -f manifests/pod-too-big.yaml
+sim tick 4
+kubectl get pods
+kubectl describe pod too-big
+
+# probes
+kubectl apply -f manifests/pod-probes.yaml
+sim tick 12
+kubectl get pods
+kubectl describe pod probed
+
+# a failing readiness probe drops the pod out of the Service endpoints
+kubectl apply -f manifests/deployment.yaml
+kubectl expose deploy/web --port=80
+sim tick 8
+kubectl describe svc web
+sim chaos web notready
+sim tick 6
+kubectl describe svc web
+sim chaos web clear

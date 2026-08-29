@@ -1,0 +1,18 @@
+# Lab 10 - DaemonSets  (handbook page 16)
+# Goal: one pod per node, including tainted nodes when tolerated.
+
+kubectl apply -f manifests/daemonset.yaml
+kubectl get ds
+kubectl get pods -o wide
+
+# add a node and watch the DaemonSet follow it
+sim node lab-worker-4 add
+sim tick 6
+kubectl get pods -o wide
+kubectl get ds
+
+# a DaemonSet without tolerations skips the tainted nodes
+kubectl apply -f manifests/daemonset-no-toleration.yaml
+sim tick 6
+kubectl get ds
+kubectl get pods -o wide -l app=logger

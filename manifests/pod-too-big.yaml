@@ -1,0 +1,15 @@
+# Asks for more CPU than any lab node has -> Pending / Insufficient cpu.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: too-big
+  labels:
+    app: too-big
+spec:
+  containers:
+    - name: app
+      image: nginx:1.25
+      resources:
+        requests:
+          cpu: "16"
+          memory: 32Gi

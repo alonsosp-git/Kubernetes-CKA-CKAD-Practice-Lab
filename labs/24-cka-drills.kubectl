@@ -1,0 +1,21 @@
+# Lab 24 - CKA / CKAD speed drills  (handbook page 54)
+# One line per object. This is how the exam expects you to work.
+
+kubectl create namespace exam
+kubectl run nginx --image=nginx:1.25 -n exam
+kubectl create deployment api --image=nginx:1.25 --replicas=3 -n exam
+kubectl expose deploy/api --port=80 --target-port=80 -n exam
+kubectl scale deploy/api --replicas=5 -n exam
+kubectl autoscale deploy/api --cpu-percent=70 --min=2 --max=10 -n exam
+kubectl create configmap env-config --from-literal=ENV=exam -n exam
+kubectl create secret generic api-key --from-literal=key=abc123 -n exam
+kubectl create serviceaccount deployer -n exam
+kubectl create role pod-reader --verb=get,list,watch --resource=pods -n exam
+kubectl create rolebinding read-pods --role=pod-reader --user=jane -n exam
+kubectl create job oneshot --image=busybox:1.36 -n exam
+kubectl create cronjob beat --image=busybox:1.36 --schedule='*/1 * * * *' -n exam
+kubectl label pod nginx exam=true -n exam
+kubectl annotate pod nginx reviewed=yes -n exam
+sim tick 10
+kubectl get all -n exam
+kubectl get pods -n exam -o wide

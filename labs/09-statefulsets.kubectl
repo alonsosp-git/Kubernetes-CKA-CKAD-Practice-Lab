@@ -1,0 +1,16 @@
+# Lab 09 - StatefulSets  (handbook page 15)
+# Goal: stable names, ordered startup, one PVC per replica.
+
+kubectl apply -f manifests/statefulset.yaml
+kubectl get sts,pods,pvc
+sim tick 10
+kubectl get pods -o wide
+kubectl get pvc
+
+kubectl scale sts/db --replicas=3
+sim tick 12
+kubectl get pods
+
+# scaling down keeps the PVCs - that is the point of a StatefulSet
+kubectl scale sts/db --replicas=1
+kubectl get pods,pvc

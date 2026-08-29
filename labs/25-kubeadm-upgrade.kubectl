@@ -1,0 +1,39 @@
+# Lab 25 - kubeadm: join a node and upgrade the cluster   (CKA, handbook page 4)
+# Goal: do an upgrade in the right order, and feel the rules that stop you
+#       when you get it wrong.
+
+kubeadm version
+kubectl get nodes
+kubeadm upgrade plan
+
+# --- you cannot skip a minor version ---
+#!expect-error
+kubeadm upgrade apply v1.32.0
+
+# --- control plane first ---
+kubeadm upgrade apply v1.31.1
+kubectl get nodes
+
+# --- then each node: drain, upgrade, uncordon ---
+#!expect-error
+kubeadm upgrade node --node lab-worker-1
+
+kubectl drain lab-worker-1 --ignore-daemonsets
+kubeadm upgrade node --node lab-worker-1
+kubectl uncordon lab-worker-1
+
+kubectl drain lab-worker-2 --ignore-daemonsets
+kubeadm upgrade node --node lab-worker-2
+kubectl uncordon lab-worker-2
+
+kubectl drain lab-worker-3 --ignore-daemonsets
+kubeadm upgrade node --node lab-worker-3
+kubectl uncordon lab-worker-3
+kubectl get nodes
+
+# --- add a node the way a real one joins ---
+kubeadm token create --print-join-command
+kubeadm join 172.18.0.2:6443 --token abcdef.0123456789abcdef --node-name lab-worker-4
+kubectl get nodes
+sim tick 5
+kubectl get pods -A -o wide

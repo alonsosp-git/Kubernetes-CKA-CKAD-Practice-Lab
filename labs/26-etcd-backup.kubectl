@@ -1,0 +1,31 @@
+# Lab 26 - etcd backup and restore   (CKA, handbook page 39)
+# Goal: take a verified snapshot, break the cluster, restore it.
+
+kubectl create deployment shop --image=nginx:1.25 --replicas=3
+kubectl expose deploy/shop --port=80
+kubectl create configmap shop-config --from-literal=THEME=dark
+sim tick 8
+kubectl get all
+
+# --- the four TLS flags are not optional ---
+#!expect-error
+ETCDCTL_API=3 etcdctl snapshot save /backup/etcd.db
+
+ETCDCTL_API=3 etcdctl member list --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key
+
+# --- take it, then VERIFY it ---
+ETCDCTL_API=3 etcdctl snapshot save /backup/etcd.db --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key
+ETCDCTL_API=3 etcdctl snapshot status /backup/etcd.db --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key
+
+# --- now destroy something important ---
+kubectl delete deploy shop
+kubectl delete configmap shop-config
+kubectl get all
+kubectl get configmap
+
+# --- and rewind the cluster ---
+ETCDCTL_API=3 etcdctl snapshot restore /backup/etcd.db --data-dir=/var/lib/etcd-restored --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key
+sim tick 8
+kubectl get all
+kubectl get configmap shop-config
+kubectl get events

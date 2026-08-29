@@ -1,0 +1,12 @@
+# Lab 20 - CRDs and operators  (handbook pages 47-48)
+# Goal: extend the API with your own kind.
+
+kubectl apply -f manifests/crd.yaml
+kubectl get crd
+kubectl api-resources
+kubectl describe crd backups.lab.example.com
+
+# an operator is this CRD plus a controller that acts on it
+kubectl apply -f manifests/operator.yaml
+sim tick 8
+kubectl get deploy,pods -n operators

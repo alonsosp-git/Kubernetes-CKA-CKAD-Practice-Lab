@@ -1,0 +1,31 @@
+# Lab 22 - Troubleshooting drills  (handbook page 52)
+# Five broken things. Diagnose each one from events and logs before reading on.
+
+kubectl create namespace broken
+kubectl config set-context --current --namespace=broken
+
+# 1. wrong image name
+kubectl run typo --image=nginx:doesnotexist
+# 2. crash looping app
+kubectl create deployment crasher --image=busybox:1.36
+sim chaos crasher crash
+# 3. missing ConfigMap
+kubectl apply -f manifests/pod-missing-config.yaml -n broken
+# 4. unschedulable: asks for more CPU than any node has
+kubectl apply -f manifests/pod-too-big.yaml -n broken
+# 5. Service whose selector matches nothing
+kubectl apply -f manifests/service-broken.yaml -n broken
+
+sim tick 10
+kubectl get pods -o wide
+kubectl get events
+
+kubectl describe pod typo
+kubectl logs crasher
+kubectl describe pod missing-config
+kubectl describe pod too-big
+kubectl describe svc web-broken
+
+# fixes
+sim chaos crasher clear
+kubectl config set-context --current --namespace=default

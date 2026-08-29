@@ -1,0 +1,34 @@
+# Lab 16 - HPA, VPA and cluster autoscaling  (handbook pages 28-30)
+# Goal: make replicas move by themselves.
+
+kubectl apply -f manifests/deployment.yaml
+kubectl autoscale deploy/web --cpu-percent=50 --min=2 --max=10
+kubectl get hpa
+kubectl describe hpa web
+
+# push load in and watch it scale up
+sim load deploy/web 95
+sim tick 10
+kubectl get hpa
+kubectl get pods
+sim tick 10
+kubectl get hpa
+
+# drop the load and watch it come back down (slowly, like the real thing)
+sim load deploy/web 10
+sim tick 20
+kubectl get hpa
+kubectl get deploy
+
+# VPA recommendations
+kubectl apply -f manifests/vpa.yaml
+sim tick 5
+kubectl get vpa
+
+# cluster autoscaling: fill the cluster, then add a node
+kubectl apply -f manifests/deployment-hungry.yaml
+sim tick 6
+kubectl get pods -o wide
+sim node lab-worker-5 add
+sim tick 8
+kubectl get pods -o wide

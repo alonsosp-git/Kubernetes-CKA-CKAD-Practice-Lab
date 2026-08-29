@@ -1,0 +1,26 @@
+# Lab 04 - Deployments, ReplicaSets and rollouts  (handbook pages 6 and 8)
+# Goal: watch Deployment -> ReplicaSet -> Pod, then roll forward and back.
+
+kubectl apply -f manifests/deployment.yaml
+kubectl get deploy,rs,pods
+kubectl describe deploy web
+
+# scale
+kubectl scale deploy/web --replicas=5
+kubectl get pods -o wide
+
+# rolling update: a second ReplicaSet appears on the topology
+kubectl set image deploy/web web=nginx:1.27
+kubectl rollout status deploy/web
+kubectl get rs
+kubectl rollout history deploy/web
+
+# and back again
+kubectl rollout undo deploy/web
+kubectl rollout status deploy/web
+kubectl get rs
+
+# the classic beginner error - selector does not match template labels.
+# The next command is SUPPOSED to fail: that rejection is the lesson.
+#!expect-error
+kubectl apply -f manifests/broken-selector.yaml

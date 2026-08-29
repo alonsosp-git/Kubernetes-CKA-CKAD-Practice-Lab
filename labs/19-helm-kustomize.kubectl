@@ -1,0 +1,21 @@
+# Lab 19 - Helm and Kustomize  (handbook pages 45-46)
+# Goal: package once, deploy per environment.
+
+helm install shop charts/webapp
+helm list
+kubectl get all
+sim tick 8
+kubectl get pods
+
+helm upgrade shop charts/webapp --set replicaCount=4 --set image.tag=1.27
+kubectl get deploy
+helm list
+helm template shop charts/webapp
+helm uninstall shop
+
+# kustomize: one base, two overlays
+kustomize build kustomize/overlays/dev
+kubectl apply -k kustomize/overlays/dev
+kubectl apply -k kustomize/overlays/prod
+kubectl get deploy -A
+kubectl get deploy -A --show-labels

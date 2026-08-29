@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: storage-user
+  labels:
+    app: storage-user
+spec:
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: dynamic-claim
+  containers:
+    - name: app
+      image: nginx:1.25
+      volumeMounts:
+        - name: data
+          mountPath: /usr/share/nginx/html

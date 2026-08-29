@@ -1,0 +1,37 @@
+# docker compose up --build
+#
+# The container is treated as untrusted: it gets no capabilities, no write
+# access to its own filesystem, no ability to gain privileges, and a port that
+# is published to this machine only.
+services:
+  k8s-lab:
+    build: .
+    image: k8s-practice-lab:1.1.0
+    container_name: k8s-lab
+    ports:
+      # 127.0.0.1 prefix: without it, Docker publishes on every interface and
+      # punches through the host firewall to do it (CWE-1327).
+      - "127.0.0.1:8899:8899"
+    environment:
+      K8SLAB_IN_DOCKER: "1"
+      K8SLAB_STATE: "/tmp/k8slab"
+    read_only: true                    # nothing writes to the image layers
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=64m
+    cap_drop: [ALL]                    # least privilege (CIS Docker 5.3)
+    security_opt:
+      - no-new-privileges:true         # setuid binaries cannot escalate
+    pids_limit: 256                    # fork-bomb ceiling
+    mem_limit: 512m
+    cpus: 1.0
+    ulimits:
+      nofile: { soft: 1024, hard: 2048 }
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys;sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8899/healthz',timeout=3).status==200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }

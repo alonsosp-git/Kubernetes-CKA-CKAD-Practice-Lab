@@ -1,0 +1,22 @@
+# Lab 17 - Ingress and the Ingress Controller  (handbook pages 31-32)
+# Goal: one entry point, many services.
+
+kubectl apply -f manifests/two-apps.yaml
+kubectl get deploy,svc
+
+# an Ingress with no controller does nothing - the lab tells you so
+kubectl apply -f manifests/ingress.yaml
+kubectl get ingress
+kubectl describe ingress shop
+
+# install a controller
+kubectl create namespace ingress-nginx
+kubectl apply -f manifests/ingress-controller.yaml
+sim tick 8
+kubectl get pods -n ingress-nginx
+kubectl get ingress
+
+# and a rule that points at a service that does not exist
+kubectl apply -f manifests/ingress-broken.yaml
+kubectl describe ingress broken
+kubectl get events

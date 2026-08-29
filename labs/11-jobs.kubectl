@@ -1,0 +1,18 @@
+# Lab 11 - Jobs and CronJobs  (handbook pages 17-18)
+# Goal: run-to-completion work, and work on a schedule.
+
+kubectl apply -f manifests/job.yaml
+kubectl get jobs,pods
+sim tick 15
+kubectl get jobs
+kubectl get pods
+kubectl logs job/data-import
+
+kubectl apply -f manifests/cronjob.yaml
+kubectl get cj
+sim tick 70
+kubectl get jobs
+sim tick 70
+kubectl get jobs
+kubectl patch cronjob nightly-report -p '{"spec":{"suspend":true}}'
+kubectl get cj

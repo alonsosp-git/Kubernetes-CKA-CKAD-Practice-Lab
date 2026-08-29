@@ -1,0 +1,16 @@
+# Lab 07 - Namespaces and ResourceQuotas  (handbook page 10)
+# Goal: isolate a team and cap what it can consume.
+
+kubectl create namespace dev
+kubectl get ns
+kubectl apply -f manifests/quota.yaml
+kubectl describe quota dev-quota -n dev
+
+kubectl create deployment api --image=nginx:1.25 --replicas=2 -n dev
+kubectl get all -n dev
+
+# switch default namespace, then switch back
+kubectl config set-context --current --namespace=dev
+kubectl get pods
+kubectl config set-context --current --namespace=default
+kubectl get pods -n dev

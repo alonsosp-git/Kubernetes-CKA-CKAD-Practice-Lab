@@ -1,0 +1,37 @@
+# Lab 28 - NetworkPolicy, actually enforced   (handbook page 33)
+# Goal: watch a connection go from allowed to denied, and read WHY.
+
+kubectl apply -f manifests/two-apps.yaml
+kubectl run client --image=busybox:1.36 --labels=tier=frontend
+kubectl run outsider --image=busybox:1.36 --labels=tier=other
+sim tick 10
+kubectl get pods --show-labels
+
+# --- flat network: everything reaches everything ---
+kubectl exec client -- curl http://api:8080
+kubectl exec outsider -- curl http://api:8080
+sim connectivity 8080
+
+# --- one policy makes api default-deny, then allows only app=web ---
+kubectl apply -f manifests/networkpolicy-lab28.yaml
+sim tick 3
+kubectl get netpol
+kubectl describe netpol api-allow-from-client
+
+kubectl exec client -- curl http://api:8080
+#!expect-error
+kubectl exec outsider -- curl http://api:8080
+sim connectivity 8080
+
+# --- egress works the same way ---
+kubectl apply -f manifests/networkpolicy-egress.yaml
+sim tick 3
+#!expect-error
+kubectl exec client -- curl http://web:80
+kubectl exec client -- curl http://api:8080
+sim connectivity
+
+# --- remove the policies and everything opens up again ---
+kubectl delete netpol --all
+sim tick 3
+sim connectivity 8080

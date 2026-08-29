@@ -1,0 +1,17 @@
+# Lab 21 - Metrics, logs and events  (handbook pages 50-51)
+# Goal: the three signals you reach for during an incident.
+
+kubectl apply -f manifests/deployment.yaml
+sim tick 8
+kubectl top nodes
+kubectl top pods
+kubectl top pods -A
+
+kubectl get events
+kubectl get events -A
+
+kubectl apply -f manifests/daemonset.yaml
+sim tick 6
+kubectl get ds
+kubectl get pods -o wide -l app=node-exporter
+kubectl logs -l app=web --tail=20

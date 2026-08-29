@@ -1,0 +1,20 @@
+# api accepts traffic only from pods labelled run=client, on 8080.
+# Selecting api at all makes it default-deny for ingress.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: api-allow-from-client
+spec:
+  podSelector:
+    matchLabels:
+      app: api
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              run: client
+      ports:
+        - protocol: TCP
+          port: 8080

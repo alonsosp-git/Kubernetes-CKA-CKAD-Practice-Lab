@@ -1,0 +1,22 @@
+# Lab 18 - RBAC, ServiceAccounts, NetworkPolicy  (handbook pages 33-38)
+# Goal: least privilege, pod identity and traffic rules.
+
+kubectl create namespace dev
+kubectl apply -f manifests/rbac.yaml
+kubectl get role,rolebinding -n dev
+
+sim rbac on
+sim user bob
+kubectl get pods -n dev
+kubectl auth can-i list pods -n dev
+kubectl auth can-i delete deployments -n dev
+sim user admin
+
+kubectl create serviceaccount app-sa -n dev
+kubectl get sa -n dev
+kubectl auth can-i list pods --as=system:serviceaccount:dev:app-sa -n dev
+
+kubectl apply -f manifests/networkpolicy.yaml
+kubectl get netpol
+kubectl describe netpol api-allow-from-web
+sim rbac off

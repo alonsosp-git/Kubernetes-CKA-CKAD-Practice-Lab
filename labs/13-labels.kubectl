@@ -1,0 +1,17 @@
+# Lab 13 - Labels, selectors and annotations  (handbook pages 21-22)
+# Goal: group and target objects; attach metadata that is not for selection.
+
+kubectl apply -f manifests/deployment.yaml
+kubectl get pods --show-labels
+kubectl get pods -l app=web
+kubectl get pods -l 'app!=web'
+
+kubectl label deploy/web tier=frontend
+kubectl label deploy/web tier=backend --overwrite
+kubectl get deploy --show-labels
+kubectl label deploy/web tier-
+
+kubectl annotate deploy/web owner=platform-team
+kubectl annotate deploy/web description="public storefront"
+kubectl describe deploy web
+kubectl annotate deploy/web owner-

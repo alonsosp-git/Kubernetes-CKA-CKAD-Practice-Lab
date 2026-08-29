@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-webapp
+  labels:
+    app: {{ .Release.Name }}-webapp
+spec:
+  type: {{ .Values.service.type | default "ClusterIP" }}
+  selector:
+    app: {{ .Release.Name }}-webapp
+  ports:
+    - port: {{ .Values.service.port | default 80 }}
+      targetPort: 80

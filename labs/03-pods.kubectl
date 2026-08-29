@@ -1,0 +1,16 @@
+# Lab 03 - Pods  (handbook page 5)
+# Goal: create pods two ways, then inspect one properly.
+
+kubectl run web --image=nginx:1.25 --port=80
+kubectl get pods -o wide
+kubectl describe pod web
+kubectl logs web
+kubectl exec web -- env
+
+kubectl apply -f manifests/pod.yaml
+kubectl get pods
+kubectl get pod nginx-pod -o yaml
+
+# Pods are ephemeral - delete one and nothing brings it back.
+kubectl delete pod web
+kubectl get pods

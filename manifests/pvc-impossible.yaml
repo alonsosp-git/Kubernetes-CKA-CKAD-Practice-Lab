@@ -1,0 +1,12 @@
+# No StorageClass and no matching PV -> stays Pending forever.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: too-big
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nvme-does-not-exist
+  resources:
+    requests:
+      storage: 500Gi

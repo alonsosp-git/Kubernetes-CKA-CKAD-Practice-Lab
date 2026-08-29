@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: private-app
+  labels:
+    app: private-app
+spec:
+  imagePullSecrets:
+    - name: regcred
+  containers:
+    - name: app
+      image: registry.lab/private/myapp:1.0
+      ports:
+        - containerPort: 80

@@ -1,0 +1,22 @@
+# Lab 08 - PV, PVC, StorageClass, dynamic provisioning  (handbook pages 11-14)
+# Goal: bind storage statically, then let a StorageClass do it for you.
+
+kubectl get sc
+kubectl apply -f manifests/pv.yaml
+kubectl apply -f manifests/pvc.yaml
+kubectl get pv,pvc
+kubectl describe pvc data-claim
+
+# dynamic provisioning - no PV created by hand
+kubectl apply -f manifests/pvc-dynamic.yaml
+kubectl get pv,pvc
+
+# mount it
+kubectl apply -f manifests/pod-with-pvc.yaml
+kubectl get pods -o wide
+kubectl describe pod storage-user
+
+# a claim that nothing can satisfy
+kubectl apply -f manifests/pvc-impossible.yaml
+kubectl get pvc
+kubectl describe pvc too-big

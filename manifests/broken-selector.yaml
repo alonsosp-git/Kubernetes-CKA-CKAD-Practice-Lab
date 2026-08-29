@@ -1,0 +1,18 @@
+# This one is REJECTED on purpose: selector does not match template labels.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mismatched
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: app
+          image: nginx:1.25

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: webapp
+description: A demo chart used by the Helm lab (handbook page 45)
+type: application
+version: 1.0.0
+appVersion: "1.25"

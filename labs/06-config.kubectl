@@ -1,0 +1,19 @@
+# Lab 06 - ConfigMaps and Secrets  (handbook page 9)
+# Goal: inject config as env vars and as mounted files.
+
+kubectl create configmap app-config --from-literal=APP_PORT=8080 --from-literal=LOG_LEVEL=debug
+kubectl create secret generic db-secret --from-literal=password=s3cr3t
+kubectl get cm,secret
+kubectl describe cm app-config
+
+kubectl apply -f manifests/configmap.yaml
+kubectl apply -f manifests/pod-with-config.yaml
+kubectl get pods
+kubectl exec config-consumer -- env
+kubectl exec config-consumer -- ls /etc/config
+kubectl exec config-consumer -- cat /etc/config/app.properties
+
+# a pod that references a ConfigMap which does not exist
+kubectl apply -f manifests/pod-missing-config.yaml
+kubectl get pods
+kubectl describe pod missing-config

@@ -1,0 +1,22 @@
+# Lab 05 - Services  (handbook page 7)
+# Goal: expose pods, read endpoints, then break the selector on purpose.
+
+kubectl apply -f manifests/deployment.yaml
+kubectl expose deploy/web --port=80 --target-port=80
+kubectl get svc -o wide
+kubectl describe svc web
+
+# service discovery from inside a pod
+kubectl run client --image=busybox:1.36
+kubectl exec client -- nslookup web
+kubectl exec client -- curl http://web
+
+# NodePort and LoadBalancer
+kubectl apply -f manifests/service-nodeport.yaml
+kubectl apply -f manifests/service-lb.yaml
+kubectl get svc
+
+# now break it: point the selector at a label nothing has
+kubectl apply -f manifests/service-broken.yaml
+kubectl describe svc web-broken
+kubectl get events

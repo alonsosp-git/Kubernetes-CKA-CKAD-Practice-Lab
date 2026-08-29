@@ -1,0 +1,38 @@
+# Lab 29 - images, registries and pull secrets   (CKAD, handbook page 5)
+# Goal: understand every way an image pull can fail.
+
+# --- 1. an image that simply does not exist ---
+kubectl run typo --image=nginx:doesnotexist
+sim tick 6
+kubectl get pods
+kubectl describe pod typo
+
+# --- 2. built locally, never pushed: the node cannot reach your laptop ---
+docker build -t myapp:1.0 .
+docker images
+kubectl run local-only --image=myapp:1.0
+sim tick 6
+kubectl get pods
+
+# --- 3. pushed to a private repository, with no credentials ---
+docker tag myapp:1.0 registry.lab/private/myapp:1.0
+docker push registry.lab/private/myapp:1.0
+kubectl run needs-auth --image=registry.lab/private/myapp:1.0
+sim tick 6
+kubectl get pods
+kubectl describe pod needs-auth
+
+# --- 4. give it credentials ---
+kubectl create secret docker-registry regcred --docker-server=registry.lab --docker-username=dev --docker-password=s3cr3t
+kubectl get secret regcred
+kubectl apply -f manifests/pod-private-image.yaml
+sim tick 8
+kubectl get pods
+kubectl describe pod private-app
+
+# --- 5. a public image just works ---
+docker tag myapp:1.0 registry.lab/public/myapp:1.0
+docker push registry.lab/public/myapp:1.0
+kubectl run public-app --image=registry.lab/public/myapp:1.0
+sim tick 8
+kubectl get pods -o wide

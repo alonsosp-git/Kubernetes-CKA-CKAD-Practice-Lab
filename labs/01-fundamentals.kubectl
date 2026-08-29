@@ -1,0 +1,11 @@
+# Lab 01 - Fundamentals  (handbook page 3)
+# Goal: look around a cluster the way you would on your first day.
+
+kubectl cluster-info
+kubectl get nodes
+kubectl get nodes -o wide
+kubectl get namespaces
+kubectl api-resources
+kubectl get all --all-namespaces
+kubectl explain pods
+kubectl version

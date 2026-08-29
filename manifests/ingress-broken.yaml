@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: broken
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: gone.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: service-that-does-not-exist
+                port:
+                  number: 80

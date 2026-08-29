@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: missing-config
+  labels:
+    app: missing-config
+spec:
+  volumes:
+    - name: config
+      configMap:
+        name: does-not-exist
+  containers:
+    - name: app
+      image: nginx:1.25
+      volumeMounts:
+        - name: config
+          mountPath: /etc/config

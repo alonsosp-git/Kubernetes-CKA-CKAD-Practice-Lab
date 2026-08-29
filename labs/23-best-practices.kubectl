@@ -1,0 +1,19 @@
+# Lab 23 - Production best practices  (handbook page 53)
+# Goal: a workload that ticks every box on the checklist.
+
+kubectl create namespace prod
+kubectl apply -f manifests/production.yaml
+sim tick 12
+kubectl get deploy,pods,pdb -n prod
+kubectl get pods -o wide -n prod
+kubectl describe deploy web -n prod
+
+# pinned tag, requests+limits, probes, 3 replicas, anti-affinity, PDB, quota
+kubectl describe quota -n prod
+kubectl get pdb -n prod
+
+# now simulate a node failure and confirm the app survives
+sim node lab-worker-1 down
+sim tick 10
+kubectl get pods -o wide -n prod
+sim node lab-worker-1 up

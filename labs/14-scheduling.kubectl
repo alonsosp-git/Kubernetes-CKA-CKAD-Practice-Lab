@@ -1,0 +1,30 @@
+# Lab 14 - Taints, tolerations, node and pod affinity  (handbook pages 23-25)
+# Goal: steer pods onto - and away from - specific nodes.
+
+kubectl get nodes --show-labels
+kubectl taint nodes lab-worker-1 dedicated=payments:NoSchedule
+kubectl taint nodes lab-worker-2 dedicated=payments:NoSchedule
+
+# no toleration -> Pending, and the event tells you why
+kubectl run plain --image=nginx:1.25
+sim tick 4
+kubectl get pods -o wide
+kubectl describe pod plain
+
+# with a toleration it schedules
+kubectl apply -f manifests/pod-toleration.yaml
+sim tick 5
+kubectl get pods -o wide
+
+kubectl taint nodes lab-worker-1 dedicated-
+kubectl taint nodes lab-worker-2 dedicated-
+
+# node affinity: only nodes labelled disktype=ssd
+kubectl apply -f manifests/pod-node-affinity.yaml
+sim tick 5
+kubectl get pods -o wide
+
+# anti-affinity: one replica per node
+kubectl apply -f manifests/deployment-anti-affinity.yaml
+sim tick 10
+kubectl get pods -o wide -l app=spread

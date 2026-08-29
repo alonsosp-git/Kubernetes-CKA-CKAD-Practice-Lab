@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-with-init
+  labels:
+    app: app-with-init
+spec:
+  initContainers:
+    - name: wait-for-db
+      image: busybox:1.36
+      command: ["sh", "-c", "until nslookup db; do sleep 2; done"]
+    - name: run-migrations
+      image: busybox:1.36
+      command: ["sh", "-c", "echo running migrations"]
+  containers:
+    - name: app
+      image: nginx:1.25
+      ports:
+        - containerPort: 80

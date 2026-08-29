@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: payments
+  labels:
+    app: payments
+spec:
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      value: payments
+      effect: NoSchedule
+  containers:
+    - name: app
+      image: nginx:1.25
